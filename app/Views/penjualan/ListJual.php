@@ -1,7 +1,7 @@
 <?= $this->extend('layout/default') ?>
-
 <?= $this->section('content') ?>
 <title>Penjualan || UMKM Puri Utami</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
@@ -59,14 +59,14 @@
                     foreach($penjualan as $row):
                         ?>
                             <tr>
-                <td><?= $row->id_penjualan?></td>
+                              <td><?= $row->id_penjualan?></td>
                                 <td><?= substr($row->tanggal,0,10);?></td>
                                 <td><?= $row->nama_pelanggan;?></td>
                                 <td><?= rupiah($row->total);?></td>
                                 <td>                                  
-                                  <a class="btn btn-default" data-toggle="modal" data-target="#modal-item">
+                                  <button onclick="modalDetail('<?= $row->id_penjualan ?>')" type="button" class="btn btn-default" data-toggle="modal" data-target="#exampleModal">
                                     <span data-feather="info"></span> Lihat Detail
-                                  </a>
+                                </button>
                               </td>
                               </tr>
                         <?php
@@ -153,35 +153,84 @@
     <!-- /.card -->
 </section>
 
-<div class="modal fade" id="modal-item">
-  <div class="modal-dialog">
+<!-- Modal -->
+<div class="modal fade " id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        
-  <h4 class="modal-title">Detail Penjualan</h4>
+        <h5 class="modal-title" id="exampleModalLabel">Detail Transaksi </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-  </button>
+        <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="detail-transaksi"> 
+        <h6 id="nama-pelanggan">Nama Pelanggan: Wisnu</h6>
+        <h6 id="tanggal">Tanggal: 12-02-2022</h6>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">No</th>
+              <th scope="col">Nama Barang</th>
+              <th scope="col">Harga</th>
+              <th scope="col">Jumlah</th>
+            </tr>
+          </thead>
+          <tbody id="tabel-penjualan">
+          </tbody>
+        </table>
+        <h5 class="text-right r-10" id="harga"></h5>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="print()">Print</button>
+      </div>
+    </div>
   </div>
-  <div class="modal-body table-responsive">
-    <table class="table table-border table-striped" id="table">
-      <thead>
+</div>
+<script>
+
+function modalDetail(id_penjualan){
+  var base_url = window.location.origin
+  const nama = document.getElementById('nama-pelanggan')
+  const tanggal = document.getElementById('tanggal')
+  const tabel = document.getElementById('tabel-penjualan')
+  const harga = document.getElementById('harga')
+  console.log(base_url)
+  fetch(`${base_url}/modaldetail?id_penjualan=${id_penjualan}`)
+  .then(response => response.json())
+  .then(data => {
+    data_tanggal = data.tanggal.split('-')
+    data_tanggal = data_tanggal[2] + '-' + data_tanggal[1] + '-' + data_tanggal[0]
+    nama.innerHTML = `Nama Pelanggan: ${data.nama_pelanggan}`
+    tanggal.innerHTML = `Tanggal: ${data_tanggal}`
+    harga.innerHTML = `Total: ${data.total} &ensp;`
+    tabel.innerHTML = ''
+    data.listPenjualan.forEach(function(item, index){
+      tabel.innerHTML += `
         <tr>
-          <td>Waktu</td>
-          <td>ID Pelanggan</td>
-          <td>Total</td>
-  </tr>
-  </thead>
-  <tbody>
-    <?php foreach($penjualan as $item){?>    
-    <tr>
-        <td><?= substr($row->tanggal,0,10);?></td>
-        <td><?= $row->nama_pelanggan;?></td>
-        <td><?= rupiah($row->total);?></td>
-    </tr>
-    <?php }?>
-  </tbody>
-
-
-
+          <th scope="row">${index+1}</th>
+          <td>${item.nama_produk}</td>
+          <td>${item.harga}</td>
+          <td>${item.jumlah}</td>
+        </tr>
+      `
+    })
+  })
+}
+</script>
+<script>
+  function print(){
+// Choose the element that our invoice is rendered in.
+      var doc = new jsPDF();
+      var elem = document.getElementById('detail-transaksi');
+      elem.getElementsByTagName('h5')[0].classList.remove('text-right')
+      console.log(elem)
+      var res = doc.autoPrint();
+      doc.fromHTML(elem, 15, 15, {
+          'width': 1000,
+      });
+      doc.save('invoice.pdf');
+      elem.getElementsByTagName('h5')[0].classList.add('text-right')
+  }
+</script>
 <?= $this->endSection() ?>

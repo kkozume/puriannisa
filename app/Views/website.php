@@ -80,15 +80,17 @@
         </div>
 		<div class="container">
 			<div class="row">
-
-			<?php foreach($kategori as $row):?> 
-				<div class="col-md-6 col-lg-4 p-b-30 m-lr-auto">
+			<?php $i = 1 ?>
+			<?php foreach($trend as $row):?> 
+				<div class="col-md-6 col-lg-3 p-b-30 m-lr-auto">
 					<!-- Block1 -->
 					<div class="block1 wrap-pic-w">
 						<img src="<?php echo base_url('images/upload/'.$row['gambar']) ?>" alt="IMG-BANNER">
-
 						<a href="<?=base_url('web')?>" class="block1-txt ab-t-l s-full flex-col-l-sb p-lr-38 p-tb-34 trans-03 respon3">
-							<div class="block1-txt-child1 flex-col-l">
+							<div class="block1-txt-child1 flex-col-l"> 
+								
+								<?= $i ?>
+								<?php $i++ ?> 
 								<span class="block1-name ltext-102 trans-04 p-b-8">
 									<?= $row['nama_kategori'];?>
 								</span>
@@ -102,7 +104,7 @@
 						</a>
 					</div>
 				</div>
-                <?php endforeach;?>  
+			<?php endforeach;?>  
 
 			<!-- Banner -->
 	<div class="sec-banner bg0 p-t-95 p-b-55">
@@ -213,4 +215,5 @@
 			</div>
 		</div>
 </section>
+
 <?= $this->endSection() ?>

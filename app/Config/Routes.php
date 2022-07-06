@@ -39,7 +39,8 @@ $routes->get('web', 'Home::web');
 $routes->get('/home', 'Home::index', ['filter' => 'filterUser']);
 $routes->get('/auth', 'Auth::index', ['filter' => 'filterLogin']);
 
-/*
+$routes->get('/modaldetail',  'ModalDetailTransaksi::index' );
+/* 
  * --------------------------------------------------------------------
  * Additional Routing
  * --------------------------------------------------------------------

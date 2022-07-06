@@ -57,4 +57,10 @@ class PelangganModel extends Model
         }
 
     }
+
+    public function getPelanggan($id_pelanggan){
+        $dbResult = $this->db->query("SELECT * FROM pelanggan WHERE id_pelanggan = ?", array($id_pelanggan));
+        return $dbResult->getResult();
+    }
+    
 }

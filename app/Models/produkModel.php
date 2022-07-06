@@ -56,4 +56,9 @@ class produkModel extends Model
             unlink(FCPATH.'dokumen/upload/'.$nama_file_gambar); //delete file gambar
         }
     }
+
+    public function getProduk($kode_produk){
+        $dbResult = $this->db->query("SELECT * FROM produk WHERE kode_produk = ?", array($kode_produk));
+        return $dbResult->getResult();
+    }
 }

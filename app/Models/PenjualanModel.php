@@ -107,4 +107,16 @@ class PenjualanModel extends Model{
         return $hasil;
     }
 
+    public function getPenjualan($id_penjualan){
+        $hasil = $this->db->query("SELECT * FROM penjualan WHERE id_penjualan =?",array($id_penjualan));
+
+        return $hasil->getResult();
+    }
+
+    public function allDetailPenjualan($id_penjualan){
+        $hasil = $this->db->query("SELECT * FROM detail_penjualan1 WHERE id_penjualan =?",array($id_penjualan));
+
+        return $hasil->getResult();
+    }
+
 }
